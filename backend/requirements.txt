@@ -1,0 +1,4 @@
+fastapi
+uvicorn
+mcrcon
+python-dotenv
