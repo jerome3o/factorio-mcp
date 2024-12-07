@@ -1,16 +1,15 @@
 # Factorio MCP Server 🏭
 
-A Model Context Protocol (MCP) server for managing Factorio servers using Claude. This repository contains two main components:
+A [Model Context Protocol](https://www.anthropic.com/news/model-context-protocol) (MCP) server for managing Factorio servers using Claude. This repository contains two main components:
 
 1. An HTTP backend that securely wraps RCON commands (backend/server.py)
 2. An MCP server that provides a high-level interface for Claude (factorio_mcp.py)
 
 ## Architecture
 
-```
-┌────────┐     ┌─────────────┐     ┌────────────┐     ┌─────────────┐
-│ Claude │ ──> │   MCP API   │ ──> │ HTTP Backend│ ──> │  Factorio   │
-└────────┘     └─────────────┘     └────────────┘     └─────────────┘
+```mermaid
+flowchart LR
+    Claude --> MCP_API --> HTTP_Backend --> Factorio_Server
 ```
 
 ## Backend Server
@@ -29,7 +28,7 @@ pip install fastapi uvicorn python-dotenv mcrcon
 RCON_HOST=localhost  # Your Factorio server hostname
 RCON_PORT=27015     # Your Factorio RCON port
 RCON_PASSWORD=xxx   # Your Factorio RCON password
-API_KEY=xxx         # Generate a secure API key
+API_KEY=xxx         # Generate a secure API key (only supports one api key, for your MCP server to use)
 ```
 
 3. Run the server:
@@ -77,39 +76,3 @@ fastmcp install factorio_mcp.py -e API_KEY=your_backend_api_key
 - `teleport_player(player: str, x: float, y: float)` - Teleport players
 - `get_player_info(player: str)` - Get player details
 - `take_screenshot(player?: str, resolution?: Dict)` - Take screenshots
-
-## Example Usage
-
-Here's an example of giving a player some items via Claude:
-
-```python
-give_items(player="bob", item="nuclear-reactor", count=2)
-```
-
-Or running custom Lua code:
-
-```python
-run_lua(
-    code='game.players["bob"].print("Hello!")', 
-    explanation="Sending a personal message to Bob"
-)
-```
-
-## Security Considerations
-
-- The backend server should be run behind a reverse proxy with HTTPS
-- Generate a secure API key and store it safely
-- Consider running the backend server in a container
-- Restrict access to the RCON port to only the backend server
-
-## Contributing
-
-1. Fork the repository
-2. Create a feature branch
-3. Commit your changes
-4. Push to the branch
-5. Create a Pull Request
-
-## License
-
-MIT
